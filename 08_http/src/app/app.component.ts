@@ -4,6 +4,7 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { CopyrightDirective } from './copyright.directive';
 import { APP_SETTINGS } from './app.settings';
 import { AuthComponent } from './auth/auth.component';
+import { CartComponent } from '../cart/cart.component/cart.component';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import { AuthComponent } from './auth/auth.component';
     RouterOutlet,
     ProductListComponent,
     CopyrightDirective,
-    AuthComponent
+    AuthComponent,
+    CartComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

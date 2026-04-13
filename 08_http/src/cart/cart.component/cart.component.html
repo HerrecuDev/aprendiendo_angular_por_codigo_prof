@@ -1,0 +1,67 @@
+<div class="cart-container">
+  <h2>🛒 Gestión de Carritos</h2>
+
+  <div class="controls">
+    <div class="input-group">
+      <label for="userId">User ID:</label>
+      <input
+        type="number"
+        id="userId"
+        [ngModel]="userId()"
+        (ngModelChange)="userId.set($event)"
+        min="1"
+      />
+    </div>
+    <div class="buttons">
+      <button (click)="onSearch()" class="btn-search">🔍 Buscar</button>
+      <button (click)="createCart()" class="btn-create">➕ Crear Carrito</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+    </div>
+  }
+
+  @if (carts().length > 0) {
+    <div class="carts-list">
+      <h3>Carritos del usuario {{ userId() }}</h3>
+      @for (cart of carts(); track cart.id) {
+        <div class="cart-card" (click)="loadCartProducts(cart)">
+          <div class="cart-header">
+            <span class="cart-id">Cart #{{ cart.id }}</span>
+            <span class="cart-date">📅 {{ cart.date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="cart-products">
+            <span class="product-count">📦 {{ cart.products.length }} productos</span>
+          </div>
+        </div>
+      }
+    </div>
+  } @else if (!loading()) {
+    <div class="empty-state">
+      <p>No hay carritos para este usuario</p>
+    </div>
+  }
+
+  <!-- Sección de productos del cart seleccionado -->
+  @if (selectedCartId()) {
+    <div class="products-detail">
+      <h3>📦 Productos del Cart #{{ selectedCartId() }}</h3>
+      <div class="products-grid">
+        @for (product of selectedCartProducts(); track product.id) {
+          <div class="product-card">
+            <img [src]="product.image" [alt]="product.title" class="product-image" />
+            <div class="product-info">
+              <h4>{{ product.title }}</h4>
+              <p class="product-category">{{ product.category }}</p>
+              <p class="product-price">${{ product.price }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
