@@ -25,7 +25,7 @@
     </div>
   }
 
-  @if (carts().length > 0) {
+  @else {
     <div class="carts-list">
       <h3>Carritos del usuario {{ userId() }}</h3>
       @for (cart of carts(); track cart.id) {
@@ -38,11 +38,12 @@
             <span class="product-count">📦 {{ cart.products.length }} productos</span>
           </div>
         </div>
+
+      } @empty {
+          <div class="empty-state">
+          <p>No hay carritos para este usuario</p>
+          </div>
       }
-    </div>
-  } @else if (!loading()) {
-    <div class="empty-state">
-      <p>No hay carritos para este usuario</p>
     </div>
   }
 

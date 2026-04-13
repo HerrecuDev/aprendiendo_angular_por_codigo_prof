@@ -1,16 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Observable, map} from 'rxjs';
-import { Cart } from '../app/cart';
+import {Observable, map, forkJoin} from 'rxjs';
+import { Cart, CartProduct } from '../app/cart';
+import { APP_SETTINGS } from '../app/app.settings';
+import { Product } from '../app/product';
 
 @Injectable({providedIn: 'root',})
 export class CartService {
 
   private http = inject(HttpClient);
-  private baseUrl = 'https://fakestoreapi.com/carts';
+  private baseUrl = inject(APP_SETTINGS).apiUrl;
 
   getCarts(): Observable<Cart[]>{
-    return this.http.get<Cart[]>(this.baseUrl);
+    return this.http.get<Cart[]>(`${this.baseUrl}/carts`);
 
   }
 
@@ -22,7 +24,15 @@ export class CartService {
   }
 
   createCart(userId: number, products: any[]): Observable<Cart>{
-    return this.http.post<Cart>(this.baseUrl, {userId, products});
+    return this.http.post<Cart>(`${this.baseUrl}/carts`, {userId, products });
+  }
+
+  getCartsProducts(cart: Cart):Observable<Product[]> {
+    const productRequests = cart.products.map((p: CartProduct) =>
+       this.http.get<Product>(`${this.baseUrl}/products/${p.productId}`)
+    );
+
+    return forkJoin((productRequests));
   }
 
 }

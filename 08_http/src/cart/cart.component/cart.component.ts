@@ -3,15 +3,8 @@ import { Cart, CartProduct } from '../../app/cart';
 import { CartService } from '../cart.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-
-interface Product{
-  id:number;
-  title: string;
-  price: number;
-  image: string;
-  category:string;
-}
+import { lastValueFrom } from 'rxjs';
+import { Product } from '../../app/product';
 
 @Component({
   selector: 'app-cart',
@@ -22,7 +15,6 @@ interface Product{
 export class CartComponent {
 
   private cartService = inject(CartService);
-  private http = inject(HttpClient);
 
   userId = signal<number>(1);
   carts = signal<Cart[]>([]);
@@ -62,16 +54,32 @@ loadCartProducts(cart: Cart){
   this.selectedCartId.set(cart.id);
   this.loading.set(true);
 
-  const productRequests = cart.products.map((p: CartProduct)=>
-  this.http.get<Product>(`https://fakestoreapi.com/products/${p.productId}`)
-  );
+ this.cartService.getCartsProducts(cart).subscribe({
 
-  //PAra ejecutar todas las peticiones en paralelo:
+  next: (products) => {
+    this.selectedCartProducts.set(products);
+    this.loading.set(false);
+  },
 
-  Promise.all(productRequests.map(req => req.toPromise())).then((results: any) =>{
-    this.selectedCartProducts.set(results.filter((r: any)=> r));
-    this.loading.set(true);
-  });
+  error: () => this.loading.set(false)
+
+ });
+
+
+ /*
+
+  //Para ejecutar todas las peticiones en paralelo:
+
+  Promise.all
+                (
+                  productRequests.map(req => lastValueFrom (req))
+                )
+                .then((results) =>{
+                                          this.selectedCartProducts.set(results);
+                                          this.loading.set(false);
+                });
+
+                */
 }
 
 }
