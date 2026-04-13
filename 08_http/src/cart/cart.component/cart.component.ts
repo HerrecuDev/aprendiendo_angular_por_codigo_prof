@@ -41,10 +41,18 @@ export class CartComponent {
 createCart(){
   this.loading.set(true);
   this.cartService.createCart(this.userId(), []).subscribe({
-    next: () => {
+    next: (newCart) => {
+
+      console.log('Nuevo carrito creado:' + newCart)
+
       this.onSearch();
     },
-    error: () => this.loading.set(false)
+    error: (err) => {
+
+      console.error('Error al crear un nuevo carrito ' + err)
+      this.loading.set(false)
+
+    }
   });
 }
 
