@@ -70,6 +70,8 @@ loadCartProducts(cart: Cart){
 
   //Para ejecutar todas las peticiones en paralelo:
 
+
+  //Si se HardCodea la URL:
   Promise.all
                 (
                   productRequests.map(req => lastValueFrom (req))
