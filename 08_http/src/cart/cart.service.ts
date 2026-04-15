@@ -11,13 +11,13 @@ export class CartService {
   private http = inject(HttpClient);
   private baseUrl = inject(APP_SETTINGS).apiUrl;
 
-  getCarts(): Observable<Cart[]>{
+  getCart(): Observable<Cart[]>{
     return this.http.get<Cart[]>(`${this.baseUrl}/carts`);
 
   }
 
   getCartsByUserId(userId: number): Observable<Cart[]>{
-    return this.getCarts().pipe(
+    return this.getCart().pipe(
       map(carts => carts.filter(c => c.userId === userId))
     );
 
@@ -27,9 +27,9 @@ export class CartService {
     return this.http.post<Cart>(`${this.baseUrl}/carts`, {userId, products });
   }
 
-  getCartsProducts(cart: Cart):Observable<Product[]> {
+  getCartProducts(cart: Cart):Observable<Product[]> {
     const productRequests = cart.products.map((p: CartProduct) =>
-       this.http.get<Product>(`${this.baseUrl}/products/${p.productId}`)
+      this.http.get<Product>(`${this.baseUrl}/products/${p.productId}`)
     );
 
     return forkJoin((productRequests));

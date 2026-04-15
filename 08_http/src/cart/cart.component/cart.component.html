@@ -50,6 +50,7 @@
   <!-- Sección de productos del cart seleccionado -->
   @if (selectedCartId()) {
     <div class="products-detail">
+      <button (click)="clearSelectedCart()" class="btn-back">⬅️ Volver</button>
       <h3>📦 Productos del Cart #{{ selectedCartId() }}</h3>
       <div class="products-grid">
         @for (product of selectedCartProducts(); track product.id) {

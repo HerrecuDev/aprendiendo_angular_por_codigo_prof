@@ -26,9 +26,12 @@ export class CartComponent {
 
   onSearch() {
   this.loading.set(true);
+  console.log('Buscando carritos para userId:' , this.userId())
+
   this.cartService.getCartsByUserId(this.userId()).subscribe({
 
     next: (data) => {
+      console.log('TODOS LOS CARRITOS:' , data);
       this.carts.set(data);
       this.loading.set(false);
     },
@@ -44,8 +47,10 @@ createCart(){
     next: (newCart) => {
 
       console.log('Nuevo carrito creado:' + newCart)
+      this.carts.update(carts =>[...carts,newCart]);
+      this.loading.set(false);
 
-      this.onSearch();
+
     },
     error: (err) => {
 
@@ -56,13 +61,18 @@ createCart(){
   });
 }
 
+//Para cuando pulsemos el volver desaparezca los datos del carrito buscado
+clearSelectedCart() {
+  this.selectedCartId.set(null);
+  this.selectedCartProducts.set([]);
+}
 
 //Para cargar todos los productos del cart Seleccionado:
 loadCartProducts(cart: Cart){
   this.selectedCartId.set(cart.id);
   this.loading.set(true);
 
- this.cartService.getCartsProducts(cart).subscribe({
+  this.cartService.getCartProducts(cart).subscribe({
 
   next: (products) => {
     this.selectedCartProducts.set(products);
@@ -71,7 +81,7 @@ loadCartProducts(cart: Cart){
 
   error: () => this.loading.set(false)
 
- });
+  });
 
 
  /*
