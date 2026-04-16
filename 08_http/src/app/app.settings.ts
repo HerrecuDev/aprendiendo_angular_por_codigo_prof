@@ -9,7 +9,7 @@ export interface AppSettings {
 export const appSettings: AppSettings = {
   title: 'My e-shop',
   version: '1.0',
-  apiUrl: 'http://localhost:8765'
+  apiUrl: 'http://localhost:8765'  //FakeStore Api nube : https://fakestoreapi.com
 };
 
 export const APP_SETTINGS = new InjectionToken<AppSettings>('app.settings');
